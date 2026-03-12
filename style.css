@@ -5,6 +5,36 @@ header { background: #fff; padding: 20px 25px; border-radius: 15px; box-shadow: 
 header.collapsed { padding-bottom: 15px; }
 header.collapsed .filter-container { max-height: 0; opacity: 0; pointer-events: none; margin-bottom: 0; }
 header.collapsed .toggle-icon { transform: rotate(180deg); }
+.top-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-link {
+    flex: 1;
+    text-align: center;
+    padding: 12px 20px;
+    background: #fff;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #718096;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.tab-link:hover {
+    background: #f8fafc;
+    color: #2c3e50;
+}
+
+.tab-link.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+}
 
 .filter-container { max-height: 1000px; opacity: 1; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 15px; }
 .filter-group { border-bottom: 1px solid var(--border); padding: 10px 0; display: flex; align-items: flex-start; }
