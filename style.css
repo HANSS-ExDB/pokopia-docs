@@ -133,3 +133,33 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
     .top-tabs { padding-left: 0; }
     .tab-link { flex: 1; text-align: center; padding: 12px 0; }
 }
+
+/* =========================================
+   🛠️ 모달 닫기 버튼 겹침 현상 해결
+   ========================================= */
+.modal-close {
+    top: 12px;
+    right: 12px;
+    z-index: 200; /* 버튼이 무조건 글자 위로 오도록 설정 */
+}
+
+.modal-right {
+    padding-right: 35px; /* 닫기 버튼이 침범하지 못하도록 우측에 안전 여백 확보 */
+}
+
+/* 모바일 화면에서는 버튼 크기를 살짝 줄여서 공간 확보 */
+@media (max-width: 768px) {
+    .modal-close {
+        top: 10px;
+        right: 10px;
+        padding: 4px;
+    }
+    .modal-close svg {
+        width: 18px;
+        height: 18px;
+    }
+    .modal-right {
+        padding-right: 28px; 
+    }
+}
+
