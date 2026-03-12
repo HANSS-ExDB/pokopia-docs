@@ -98,9 +98,18 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
     .pokemon-grid { grid-template-columns: repeat(7, 1fr); }
 }
 
+
+/* 좁은 태블릿 ~ 큰 스마트폰 화면 */
 @media (max-width: 768px) {
     body { padding: 10px; }
-    header { padding: 15px; }
+    
+    /* 🛠️ [수정1] 모바일에서는 헤더 고정(Sticky)을 풀어서 화면 가림 방지 */
+    header { padding: 15px; position: relative; top: 0; }
+    
+    /* 🛠️ [수정2] 필터를 펼쳤을 때도 화면의 50%까지만 차지하고 내부에 스크롤 생성 */
+    .filter-container { max-height: 50vh; overflow-y: auto; }
+    header.collapsed .filter-container { max-height: 0; }
+
     .pokemon-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
     .search-row { flex-wrap: wrap; }
     .w-1 { flex: 1 1 30%; min-width: 80px; }
@@ -127,10 +136,7 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
         right: 20px;
         padding: 10px;
     }
-    #scrollTopBtn svg {
-        width: 18px;
-        height: 18px;
-    }
+    #scrollTopBtn svg { width: 18px; height: 18px; }
 }
 
 @media (max-width: 480px) {
