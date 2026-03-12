@@ -41,7 +41,12 @@ function initUI() {
 
     createButtons('flavorOptions', ['전체', ...flavors], (v) => { selectedFlavor = v; applyFilters(); }, 'flavor');
     applyFilters();
-}
+
+    // 🛠️ [추가] 모바일(화면 너비 768px 이하)로 접속 시 기본으로 필터 접어두기
+    if (window.innerWidth <= 768) {
+        toggleHeader();
+    }
+} // <-- initUI() 함수가 끝나는 중괄호
 
 function fillDatalist(id, data) {
     const list = document.getElementById(id);
