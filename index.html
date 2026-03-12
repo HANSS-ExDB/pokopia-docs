@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Pokopia DB - Final UI Refined</title>
+    <title>Pokopia DB - Full Interaction Master</title>
     <script src="./data.js"></script>
     <style>
         :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f8f9fa; --border: #e2e8f0; }
@@ -12,25 +12,30 @@
         header.collapsed { padding-bottom: 15px; }
         header.collapsed .filter-container { max-height: 0; opacity: 0; pointer-events: none; margin-bottom: 0; }
         header.collapsed .toggle-icon { transform: rotate(180deg); }
+
         .filter-container { max-height: 1000px; opacity: 1; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 15px; }
         .filter-group { border-bottom: 1px solid var(--border); padding: 10px 0; display: flex; align-items: flex-start; }
         .group-label { width: 110px; font-weight: bold; font-size: 14px; padding-top: 8px; color: #718096; }
         .group-content { flex: 1; display: flex; flex-wrap: wrap; gap: 8px; }
-        
-        /* 검색 섹션 레이아웃 */
+
+        /* 검색 섹션 */
         .search-section { margin-top: 15px; padding-top: 15px; border-top: 2px solid #f1f5f9; }
         .search-row { display: flex; gap: 10px; align-items: center; }
         .search-input { padding: 10px 15px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 500; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
-        .search-input:focus { border-color: #4a90e2; box-shadow: 0 0 8px rgba(74, 144, 226, 0.1); }
         .w-1 { flex: 1; min-width: 80px; }
         .w-4 { flex: 4; min-width: 200px; }
 
         .opt-btn, .tag { transition: all 0.2s ease; cursor: pointer; font-weight: 600; }
         .opt-btn { padding: 5px 15px; background: #fff; border: 1.5px solid var(--border); border-radius: 30px; font-size: 13px; color: #4a5568; }
+        .opt-btn:hover { background: #fff5f5; border-color: #fab1a0; color: var(--accent); }
         .opt-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+        .opt-btn.preview { background: #ff7675 !important; border-color: #ff7675 !important; color: white !important; opacity: 0.8; }
+
         .tag { padding: 3px 10px; background: #edf2f7; border-radius: 6px; font-size: 12px; color: #4a5568; }
         .tag::before { content: "#"; margin-right: 2px; }
+        .tag:hover { background: #e3f2fd; color: #1976d2; transform: translateY(-1px); }
         .tag.active { background: #4a90e2; color: white; }
+        .tag.preview { background: #74b9ff !important; color: white !important; opacity: 0.8; }
 
         .header-controls { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 10px; }
         .toggle-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; color: #a0aec0; font-size: 13px; font-weight: 600; cursor: pointer; }
@@ -39,32 +44,23 @@
         .pokemon-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 12px; }
         .pokemon-card { background: #fff; border-radius: 12px; padding: 10px; text-align: center; border: 1px solid #eee; transition: all 0.3s ease; cursor: pointer; }
         .pokemon-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
+        .pokemon-card.highlight { border-color: #4a90e2; transform: scale(1.05); box-shadow: 0 8px 15px rgba(74, 144, 226, 0.2); z-index: 5; }
+        .pokemon-grid.dimmed .pokemon-card:not(.highlight) { opacity: 0.3; filter: grayscale(0.5); }
+        .pokemon-card:hover { transform: translateY(-8px) scale(1.05); border-color: #4a90e2; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 10; }
         
-        /* [요청] 포켓몬 카드 내 번호 디자인 디테일 */
-        .name-box { margin-top: 10px; line-height: 1.3; }
         .id-number { font-size: 10px; color: #a0aec0; font-weight: 500; }
         .p-name { font-size: 13px; color: #2d3748; font-weight: bold; display: block; margin-top: 2px; }
 
-        /* 모달 스타일 및 애니메이션 */
+        /* 모달 스타일 */
         #detailModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 200; justify-content: center; align-items: center; }
         .modal-content { background: #fff; width: 90%; max-width: 650px; border-radius: 20px; padding: 40px; position: relative; display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-close { position: absolute; top: 20px; right: 20px; cursor: pointer; background: #f1f5f9; border-radius: 50%; padding: 5px; border: none; }
         .modal-left { text-align: center; border-right: 1px solid #edf2f7; padding-right: 20px; }
         .modal-img { width: 100%; max-width: 250px; object-fit: contain; margin-bottom: 20px; image-rendering: -webkit-optimize-contrast; }
-        .modal-id { font-size: 18px; color: #a0aec0; font-weight: 600; }
-        .modal-name { font-size: 32px; font-weight: 800; margin: 10px 0; }
         .modal-right { display: flex; flex-direction: column; gap: 15px; padding-left: 10px; }
-        .info-row { display: flex; align-items: center; gap: 15px; }
         .info-row.env-row { margin-bottom: 30px; }
         .info-row.flavor-row { margin-top: auto; padding-top: 10px; border-top: 1px dashed #e2e8f0; }
-        .info-label { width: 60px; font-weight: 800; color: #718096; font-size: 15px; }
         .info-value { font-size: 16px; font-weight: 600; background: #f8fafc; padding: 6px 15px; border-radius: 10px; flex: 1; }
-        
-        /* [요청] 모달 하단 좋아하는 것 태그 섹션 */
         .modal-bottom { grid-column: span 2; border-top: 1px solid #edf2f7; padding-top: 25px; margin-top: 10px; }
-        .bottom-title { font-weight: 800; margin-bottom: 15px; color: #4a5568; }
-        .modal-tags { display: flex; flex-wrap: wrap; gap: 10px; }
     </style>
 </head>
 <body>
@@ -96,41 +92,34 @@
     </div>
 </header>
 
-<datalist id="listNames"></datalist>
-<datalist id="listSpecs"></datalist>
-<datalist id="listLikes"></datalist>
-<datalist id="listFlavors"></datalist>
+<datalist id="listNames"></datalist><datalist id="listSpecs"></datalist><datalist id="listLikes"></datalist><datalist id="listFlavors"></datalist>
 
 <div class="pokemon-grid" id="mainList"></div>
 
 <div id="detailModal" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="modal-close" onclick="closeModal()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
         <div class="modal-left">
-            <span id="mId" class="modal-id"></span>
-            <h2 id="mName" class="modal-name"></h2>
-            <img id="mImg" class="modal-img" src="" alt="">
+            <span id="mId" style="color:#a0aec0; font-weight:600;"></span>
+            <h2 id="mName" style="font-size:32px; margin:10px 0;"></h2>
+            <img id="mImg" class="modal-img" src="">
         </div>
         <div class="modal-right">
-            <div class="info-row env-row"><div class="info-label">환경</div><div id="mEnv" class="info-value"></div></div>
-            <div class="info-row"><div class="info-label">특기1</div><div id="mSpec1" class="info-value"></div></div>
-            <div class="info-row"><div class="info-label">특기2</div><div id="mSpec2" class="info-value"></div></div>
-            <div id="mProduceBox" class="info-row" style="display:none;"><div class="info-label">생산</div><div id="mProduce" class="info-value" style="color:var(--accent);"></div></div>
-            <div class="info-row flavor-row"><div class="info-label">맛</div><div id="mFlavor" class="info-value"></div></div>
+            <div class="info-row env-row"><div class="info-label" style="width:60px; font-weight:800; color:#718096;">환경</div><div class="info-value" id="mEnv"></div></div>
+            <div class="info-row"><div class="info-label" style="width:60px; font-weight:800; color:#718096;">특기1</div><div class="info-value" id="mSpec1"></div></div>
+            <div class="info-row"><div class="info-label" style="width:60px; font-weight:800; color:#718096;">특기2</div><div class="info-value" id="mSpec2"></div></div>
+            <div id="mProduceBox" class="info-row" style="display:none;"><div class="info-label" style="width:60px; font-weight:800; color:#718096;">생산</div><div class="info-value" id="mProduce" style="color:var(--accent);"></div></div>
+            <div class="info-row flavor-row"><div class="info-label" style="width:60px; font-weight:800; color:#718096;">맛</div><div class="info-value" id="mFlavor"></div></div>
         </div>
         <div class="modal-bottom">
-            <div class="bottom-title">좋아하는 것들</div>
-            <div id="mTags" class="modal-tags"></div>
+            <div style="font-weight:800; margin-bottom:15px; color:#4a5568;">좋아하는 것들</div>
+            <div id="mTags" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
         </div>
     </div>
 </div>
 
 <script>
     let selectedEnv = 'all', selectedFlavor = 'all';
-    let selectedSpecs = new Set(), selectedTags = new Set();
-    let isHeaderCollapsed = false;
+    let selectedSpecs = new Set(), selectedTags = new Set(), isHeaderCollapsed = false;
 
     window.onload = () => { if (typeof pokemonDb !== 'undefined') initUI(); };
 
@@ -141,10 +130,7 @@
         const specs = [...new Set(pokemonDb.flatMap(p => p.specialties))].filter(v => v && v !== 'nan');
         const tags = [...new Set(pokemonDb.flatMap(p => p.likes))].filter(v => v && v !== 'nan');
 
-        fillDatalist('listNames', names);
-        fillDatalist('listSpecs', specs);
-        fillDatalist('listLikes', tags);
-        fillDatalist('listFlavors', flavors);
+        fillDatalist('listNames', names); fillDatalist('listSpecs', specs); fillDatalist('listLikes', tags); fillDatalist('listFlavors', flavors);
 
         createButtons('envOptions', ['전체', ...envs], (v) => { selectedEnv = v; applyFilters(); }, 'env');
         
@@ -156,12 +142,14 @@
         specs.forEach(s => {
             const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.textContent = s;
             btn.onclick = () => { clearHighlight(); selectedSpecs.has(s) ? selectedSpecs.delete(s) : selectedSpecs.add(s); updateActiveUI(); applyFilters(); };
+            btn.onmouseenter = () => highlightByTag('specialties', s); btn.onmouseleave = clearHighlight;
             specGroup.appendChild(btn);
         });
 
         tags.forEach(t => {
             const el = document.createElement('div'); el.className = 'tag'; el.textContent = t;
             el.onclick = () => { clearHighlight(); selectedTags.has(t) ? selectedTags.delete(t) : selectedTags.add(t); updateActiveUI(); applyFilters(); };
+            el.onmouseenter = () => highlightByTag('likes', t); el.onmouseleave = clearHighlight;
             document.getElementById('tagBox').appendChild(el);
         });
 
@@ -170,13 +158,40 @@
     }
 
     function fillDatalist(id, data) {
-        const list = document.getElementById(id);
-        list.innerHTML = '';
-        data.sort().forEach(item => {
-            const option = document.createElement('option');
-            option.value = item;
-            list.appendChild(option);
+        const list = document.getElementById(id); list.innerHTML = '';
+        data.sort().forEach(item => { const opt = document.createElement('option'); opt.value = item; list.appendChild(opt); });
+    }
+
+    function highlightByTag(type, value) {
+        if (value === 'all' || isHeaderCollapsed) return;
+        const grid = document.getElementById('mainList'); grid.classList.add('dimmed');
+        document.querySelectorAll('.pokemon-card').forEach(card => {
+            const p = pokemonDb.find(item => item.id === parseInt(card.dataset.id));
+            if(!p) return;
+            let match = false;
+            if (type === 'env') match = p.env === value;
+            else if (type === 'flavor') match = p.flavor === value;
+            else if (type === 'specialties') match = p.specialties.includes(value);
+            else if (type === 'likes') match = p.likes.includes(value);
+            card.classList.toggle('highlight', match);
         });
+    }
+
+    function clearHighlight() {
+        const grid = document.getElementById('mainList'); if(grid) grid.classList.remove('dimmed');
+        document.querySelectorAll('.pokemon-card').forEach(c => c.classList.remove('highlight'));
+    }
+
+    function previewPokemon(p, isEnter) {
+        if (isHeaderCollapsed) return;
+        if (isEnter) {
+            document.querySelectorAll('#envOptions .opt-btn').forEach(b => b.classList.toggle('preview', b.textContent === p.env));
+            document.querySelectorAll('#flavorOptions .opt-btn').forEach(b => b.classList.toggle('preview', b.textContent === p.flavor));
+            document.querySelectorAll('#specOptions .opt-btn').forEach(b => b.classList.toggle('preview', p.specialties.includes(b.textContent)));
+            document.querySelectorAll('#tagBox .tag').forEach(t => t.classList.toggle('preview', p.likes.includes(t.textContent)));
+        } else {
+            document.querySelectorAll('.opt-btn, .tag').forEach(el => el.classList.remove('preview'));
+        }
     }
 
     function applyFilters() {
@@ -192,71 +207,58 @@
             const flavorBtnOk = (selectedFlavor === 'all' || p.flavor === selectedFlavor);
             const specBtnOk = selectedSpecs.size === 0 || [...selectedSpecs].some(s => p.specialties.includes(s));
             const tagsBtnOk = selectedTags.size === 0 || [...selectedTags].every(t => p.likes.includes(t));
-
             const formattedPokedexNo = String(p.pokedex_no).padStart(3, '0');
             const noOk = !qNo || formattedPokedexNo.includes(qNo) || String(p.pokedex_no).includes(qNo);
             const nameOk = !qName || p.name.includes(qName);
             const specOk = !qSpec || p.specialties.some(s => s.includes(qSpec));
             const flavorOk = !qFlavor || p.flavor.includes(qFlavor);
-
             let likeOk = true;
-            if (qLike) {
-                const keywords = qLike.split(',').map(k => k.trim()).filter(k => k !== "");
-                likeOk = keywords.every(kw => p.likes.some(l => l.includes(kw)));
-            }
-
+            if (qLike) { const ks = qLike.split(',').map(k => k.trim()).filter(k => k !== ""); likeOk = ks.every(kw => p.likes.some(l => l.includes(kw))); }
             return envOk && flavorBtnOk && specBtnOk && tagsBtnOk && noOk && nameOk && specOk && likeOk && flavorOk;
         });
 
         list.innerHTML = '';
         filtered.forEach(p => {
-            const card = document.createElement('div');
-            card.className = 'pokemon-card'; card.dataset.id = p.id;
-            const imageId = String(p.id).padStart(3, '0');
-            const displayId = String(p.pokedex_no).padStart(3, '0');
+            const card = document.createElement('div'); card.className = 'pokemon-card'; card.dataset.id = p.id;
+            const imageId = String(p.id).padStart(3, '0'), displayId = String(p.pokedex_no).padStart(3, '0');
             card.innerHTML = `<img src="./images/docs_${imageId}.png" onerror="this.src='https://via.placeholder.com/100?text=?';"><div class="name-box"><span class="id-number">${displayId}</span><br><span class="p-name">${p.name}</span></div>`;
+            card.onmouseenter = () => previewPokemon(p, true); card.onmouseleave = () => previewPokemon(p, false);
             card.onclick = () => openModal(p);
             list.appendChild(card);
         });
         updateActiveUI();
     }
 
-    // [요청] 모달 태그 복구 로직 포함
     function openModal(p) {
-        const imageId = String(p.id).padStart(3, '0');
-        const displayId = String(p.pokedex_no).padStart(3, '0');
-        document.getElementById('mId').textContent = displayId;
-        document.getElementById('mName').textContent = p.name;
-        document.getElementById('mImg').src = `./images/docs_${imageId}.png`;
-        document.getElementById('mEnv').textContent = p.env;
-        document.getElementById('mSpec1').textContent = p.specialties[0] || "-";
-        document.getElementById('mSpec2').textContent = p.specialties[1] || "-";
+        const iId = String(p.id).padStart(3, '0'), dId = String(p.pokedex_no).padStart(3, '0');
+        document.getElementById('mId').textContent = dId; document.getElementById('mName').textContent = p.name;
+        document.getElementById('mImg').src = `./images/docs_${iId}.png`; document.getElementById('mEnv').textContent = p.env;
+        document.getElementById('mSpec1').textContent = p.specialties[0] || "-"; document.getElementById('mSpec2').textContent = p.specialties[1] || "-";
         document.getElementById('mFlavor').textContent = p.flavor;
-        
         const pBox = document.getElementById('mProduceBox');
-        if(p.produce) { pBox.style.display = 'flex'; document.getElementById('mProduce').textContent = p.produce; }
-        else { pBox.style.display = 'none'; }
-
-        // 하단 태그 복구 로직
-        const tagContainer = document.getElementById('mTags');
-        tagContainer.innerHTML = '';
-        p.likes.forEach(like => {
-            const span = document.createElement('span');
-            span.className = 'tag';
-            span.textContent = like;
-            tagContainer.appendChild(span);
-        });
-
-        document.getElementById('detailModal').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        if(p.produce) { pBox.style.display = 'flex'; document.getElementById('mProduce').textContent = p.produce; } else { pBox.style.display = 'none'; }
+        const tCon = document.getElementById('mTags'); tCon.innerHTML = '';
+        p.likes.forEach(l => { const s = document.createElement('span'); s.className = 'tag'; s.textContent = l; tCon.appendChild(s); });
+        document.getElementById('detailModal').style.display = 'flex'; document.body.style.overflow = 'hidden';
     }
 
     function closeModal() { document.getElementById('detailModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
-    function toggleHeader() { const header = document.getElementById('mainHeader'); isHeaderCollapsed = !isHeaderCollapsed; header.classList.toggle('collapsed', isHeaderCollapsed); document.querySelector('.toggle-text').textContent = isHeaderCollapsed ? "필터 펼치기" : "필터 접기"; }
-    function clearHighlight() { const grid = document.getElementById('mainList'); if(grid) grid.classList.remove('dimmed'); document.querySelectorAll('.pokemon-card').forEach(c => c.classList.remove('highlight')); }
-    function updateActiveUI() { document.querySelectorAll('#envOptions .opt-btn').forEach(b => b.classList.toggle('active', selectedEnv === (b.textContent === '전체' ? 'all' : b.textContent))); document.querySelectorAll('#flavorOptions .opt-btn').forEach(b => b.classList.toggle('active', selectedFlavor === (b.textContent === '전체' ? 'all' : b.textContent))); document.querySelectorAll('#specOptions .opt-btn').forEach(b => b.textContent === '전체' ? b.classList.toggle('active', selectedSpecs.size === 0) : b.classList.toggle('active', selectedSpecs.has(b.textContent))); document.querySelectorAll('#tagBox .tag').forEach(t => t.classList.toggle('active', selectedTags.has(t.textContent))); }
-    function createButtons(id, list, callback, type) { const container = document.getElementById(id); list.forEach((item, idx) => { const btn = document.createElement('button'); btn.className = 'opt-btn' + (idx === 0 ? ' active' : ''); btn.textContent = item; btn.onclick = () => { callback(item === '전체' ? 'all' : item); }; container.appendChild(btn); }); }
-    function resetAllFilters() { document.querySelectorAll('.search-input').forEach(i => i.value = ''); selectedEnv = 'all'; selectedFlavor = 'all'; selectedSpecs.clear(); selectedTags.clear(); applyFilters(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function toggleHeader() { const h = document.getElementById('mainHeader'); isHeaderCollapsed = !isHeaderCollapsed; h.classList.toggle('collapsed', isHeaderCollapsed); document.querySelector('.toggle-text').textContent = isHeaderCollapsed ? "필터 펼치기" : "필터 접기"; }
+    function updateActiveUI() {
+        document.querySelectorAll('#envOptions .opt-btn').forEach(b => b.classList.toggle('active', selectedEnv === (b.textContent === '전체' ? 'all' : b.textContent)));
+        document.querySelectorAll('#flavorOptions .opt-btn').forEach(b => b.classList.toggle('active', selectedFlavor === (b.textContent === '전체' ? 'all' : b.textContent)));
+        document.querySelectorAll('#specOptions .opt-btn').forEach(b => b.textContent === '전체' ? b.classList.toggle('active', selectedSpecs.size === 0) : b.classList.toggle('active', selectedSpecs.has(b.textContent)));
+        document.querySelectorAll('#tagBox .tag').forEach(t => t.classList.toggle('active', selectedTags.has(t.textContent)));
+    }
+    function createButtons(id, list, cb, type) {
+        const c = document.getElementById(id); list.forEach((item, idx) => {
+            const btn = document.createElement('button'); btn.className = 'opt-btn' + (idx === 0 ? ' active' : ''); btn.textContent = item;
+            btn.onclick = () => { clearHighlight(); cb(item === '전체' ? 'all' : item); };
+            btn.onmouseenter = () => highlightByTag(type, item === '전체' ? 'all' : item); btn.onmouseleave = clearHighlight;
+            c.appendChild(btn);
+        });
+    }
+    function resetAllFilters() { document.querySelectorAll('.search-input').forEach(i => i.value = ''); clearHighlight(); selectedEnv = 'all'; selectedFlavor = 'all'; selectedSpecs.clear(); selectedTags.clear(); applyFilters(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 </script>
 </body>
 </html>
