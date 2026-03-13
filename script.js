@@ -202,3 +202,28 @@ function scrollToTop() {
         behavior: 'smooth'
     });
 }
+
+// 다크 모드 토글 로직
+const themeToggleBtn = document.getElementById('themeToggle');
+const htmlElement = document.documentElement;
+
+// 사용자가 이전에 선택한 테마가 있는지 확인 (없으면 라이트)
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    htmlElement.setAttribute('data-theme', savedTheme);
+    themeToggleBtn.innerText = savedTheme === 'dark' ? '☀️' : '🌙';
+}
+
+themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = htmlElement.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        htmlElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        themeToggleBtn.innerText = '🌙';
+    } else {
+        htmlElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeToggleBtn.innerText = '☀️';
+    }
+});
