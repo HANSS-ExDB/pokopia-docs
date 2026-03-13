@@ -1,18 +1,105 @@
-:root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f8f9fa; --border: #e2e8f0; }
-body { font-family: 'Pretendard', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--primary); }
+:root {
+    --primary: #2c3e50;
+    --accent: #e74c3c;
+    --border: #e2e8f0;
+}
 
 /* =========================================
-   🌐 상단 탭 네비게이션 (브라우저 탭 스타일)
+   1. 기본 설정 및 배경 (블러 효과 준비)
    ========================================= */
-.top-tabs { display: flex; gap: 4px; margin-bottom: 15px; padding-left: 20px; border-bottom: 2px solid #cbd5e0; }
-.tab-link { padding: 10px 30px; background: #edf2f7; border: 2px solid transparent; border-bottom: none; border-radius: 12px 12px 0 0; text-decoration: none; color: #a0aec0; font-weight: 700; font-size: 15px; transition: background 0.2s ease; position: relative; bottom: -2px; }
-.tab-link:hover { background: #e2e8f0; color: #4a5568; }
-.tab-link.active { background: #fff; color: var(--primary); border: 2px solid #cbd5e0; border-bottom: 2px solid #fff; z-index: 10; }
+body {
+    font-family: 'Pretendard', sans-serif;
+    margin: 0;
+    /* 상단 네비게이션 바(60px)가 콘텐츠를 가리지 않도록 상단 여백 확보 */
+    padding: 80px 20px 20px 20px; 
+    color: var(--primary);
+    
+    /* 원하는 배경 이미지 경로로 수정해주세요 */
+    background-image: url('./image_bg/backgrond.jpg'); 
+    background-size: cover;          
+    background-position: center;     
+    background-repeat: no-repeat;    
+    background-attachment: fixed; 
+}
 
 /* =========================================
-   🗂️ 필터 및 헤더 영역
+   2. 상단 고정 네비게이션 바 (GNB)
    ========================================= */
-header { background: #fff; padding: 20px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; transition: all 0.3s ease-in-out; overflow: hidden; }
+#topNavbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo img {
+    height: 60px;
+    display: block;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 25px;
+    margin-left: 200px;
+    height: 100%;      /* 바 전체 높이(60px)를 꽉 채우도록 설정 */
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333333;
+    font-size: 18px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+    
+    /* 높이를 채우고 텍스트를 수직 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+    border-bottom: 3px solid transparent; /* 평소에는 투명한(보이지 않는) 3px 선 */
+}
+
+.nav-link:hover {
+    color: #b7d182;
+}
+
+.nav-link.active {
+    color: #9cc44e;
+    font-weight: 800;
+    border-bottom: 3px solid #9cc44e; /* 스크린샷과 유사한 보라색 강조 선 */
+
+}
+
+/* =========================================
+   3. 필터 및 헤더 영역 (반투명 글래스 효과)
+   ========================================= */
+header {
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    position: sticky;
+    top: 70px; /* 네비바 바로 아래에 고정되도록 설정 */
+    z-index: 100;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
 header.collapsed { padding-bottom: 15px; }
 header.collapsed .filter-container { max-height: 0; opacity: 0; pointer-events: none; margin-bottom: 0; }
 header.collapsed .toggle-icon { transform: rotate(180deg); }
@@ -24,38 +111,47 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
 .group-content { flex: 1; display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* 검색창 */
-.search-section { margin-top: 15px; padding-top: 15px; border-top: 2px solid #f1f5f9; }
+.search-section { margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(226, 232, 240, 0.5); }
 .search-row { display: flex; gap: 10px; align-items: center; }
-.search-input { padding: 10px 15px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 500; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
+.search-input { padding: 10px 15px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 500; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.9); }
 .search-input:focus { border-color: #4a90e2; box-shadow: 0 0 8px rgba(74, 144, 226, 0.1); }
 .w-1 { flex: 1; min-width: 80px; }
 .w-4 { flex: 4; min-width: 200px; }
 
 /* 버튼 및 태그 */
 .opt-btn, .tag { transition: all 0.2s ease; cursor: pointer; font-weight: 600; }
-.opt-btn { padding: 5px 15px; background: #fff; border: 1.5px solid var(--border); border-radius: 30px; font-size: 13px; color: #4a5568; }
+.opt-btn { padding: 5px 15px; background: rgba(255, 255, 255, 0.9); border: 1.5px solid var(--border); border-radius: 30px; font-size: 13px; color: #4a5568; }
 .opt-btn:hover { background: #fff5f5; border-color: #fab1a0; color: var(--accent); }
 .opt-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 .opt-btn.preview { background: #ff7675 !important; border-color: #ff7675 !important; color: white !important; opacity: 0.8; }
 
-.tag { padding: 3px 10px; background: #edf2f7; border-radius: 6px; font-size: 12px; color: #4a5568; }
+.tag { padding: 3px 10px; background: rgba(237, 242, 247, 0.8); border-radius: 6px; font-size: 12px; color: #4a5568; }
 .tag::before { content: "#"; margin-right: 2px; }
 .tag:hover { background: #e3f2fd; color: #1976d2; transform: translateY(-1px); }
 .tag.active { background: #4a90e2; color: white; }
 .tag.preview { background: #74b9ff !important; color: white !important; opacity: 0.8; }
 
 /* 헤더 컨트롤 (초기화, 접기) */
-.header-controls { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+.header-controls { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(226, 232, 240, 0.5); padding-top: 10px; }
 .toggle-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; color: #a0aec0; font-size: 13px; font-weight: 600; cursor: pointer; }
 .toggle-btn:hover { color: var(--primary); }
 .toggle-icon { transition: transform 0.3s ease; }
-.reset-btn { display: flex; align-items: center; gap: 5px; padding: 6px 14px; background: #f8f9fa; border: 1px solid #cbd5e0; border-radius: 8px; color: #4a5568; font-size: 12px; font-weight: 600; cursor: pointer; }
+.reset-btn { display: flex; align-items: center; gap: 5px; padding: 6px 14px; background: rgba(248, 249, 250, 0.8); border: 1px solid #cbd5e0; border-radius: 8px; color: #4a5568; font-size: 12px; font-weight: 600; cursor: pointer; }
 
 /* =========================================
-   🖼️ 메인 그리드 및 카드
+   4. 메인 그리드 및 카드
    ========================================= */
 .pokemon-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 12px; }
-.pokemon-card { background: #fff; border-radius: 12px; padding: 10px; text-align: center; border: 1px solid #eee; transition: all 0.3s ease; cursor: pointer; }
+
+.pokemon-card { 
+    background-color: #fff; /* 카드는 투명하지 않게 뚜렷하게 유지 */
+    border-radius: 12px; 
+    padding: 10px; 
+    text-align: center; 
+    border: 1px solid #eee; 
+    transition: all 0.3s ease; 
+    cursor: pointer; 
+}
 .pokemon-card.highlight { border-color: #4a90e2; transform: scale(1.05); box-shadow: 0 8px 15px rgba(74, 144, 226, 0.2); z-index: 5; }
 .pokemon-grid.dimmed .pokemon-card:not(.highlight) { opacity: 0.3; filter: grayscale(0.5); }
 .pokemon-card:hover { transform: translateY(-8px) scale(1.05); border-color: #4a90e2; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 10; }
@@ -66,17 +162,20 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
 .p-name { font-size: 13px; color: #2d3748; font-weight: bold; display: block; margin-top: 2px; }
 
 /* =========================================
-   🪟 상세 정보 모달
+   5. 상세 정보 모달
    ========================================= */
-#detailModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 200; justify-content: center; align-items: center; }
-.modal-content { background: #fff; width: 90%; max-width: 650px; border-radius: 20px; padding: 40px; position: relative; display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out; }
+#detailModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
+.modal-content { background-color: #fff; width: 90%; max-width: 650px; border-radius: 20px; padding: 40px; position: relative; display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out; }
 @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-.modal-close { position: absolute; top: 20px; right: 20px; cursor: pointer; background: #f1f5f9; border-radius: 50%; padding: 5px; border: none; }
+
+/* 닫기 버튼 겹침 방지 수정 */
+.modal-close { position: absolute; top: 15px; right: 15px; cursor: pointer; background: #f1f5f9; border-radius: 50%; padding: 6px; border: none; z-index: 200; }
+.modal-right { display: flex; flex-direction: column; gap: 15px; padding-left: 10px; padding-right: 35px; } /* 우측 안전 여백 */
+
 .modal-left { text-align: center; border-right: 1px solid #edf2f7; padding-right: 20px; }
 .modal-img { width: 100%; max-width: 250px; object-fit: contain; margin-bottom: 20px; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
 .modal-id { font-size: 18px; color: #a0aec0; font-weight: 600; }
 .modal-name { font-size: 32px; font-weight: 800; margin: 10px 0; }
-.modal-right { display: flex; flex-direction: column; gap: 15px; padding-left: 10px; }
 .info-row { display: flex; align-items: center; gap: 15px; }
 .info-row.env-row { margin-bottom: 30px; }
 .info-row.flavor-row { margin-top: auto; padding-top: 10px; border-top: 1px dashed #e2e8f0; }
@@ -87,21 +186,25 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
 .modal-tags { display: flex; flex-wrap: wrap; gap: 10px; }
 
 /* =========================================
-   ⬆️ 맨 위로 가기 버튼
+   6. 맨 위로 가기 버튼
    ========================================= */
 #scrollTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; background-color: var(--accent); color: white; border: none; outline: none; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); transition: all 0.3s ease; }
 #scrollTopBtn:hover { background-color: #c0392b; transform: translateY(-3px); }
 #scrollTopBtn svg { width: 22px; height: 22px; display: block; }
 
 /* =========================================
-   📱 반응형 레이아웃 (태블릿, 모바일)
+   7. 모바일 반응형
    ========================================= */
 @media (max-width: 1024px) {
     .pokemon-grid { grid-template-columns: repeat(7, 1fr); }
 }
 
 @media (max-width: 768px) {
-    body { padding: 10px; }
+    /* 네비게이션 및 기본 여백 조정 */
+    body { padding: 70px 10px 10px 10px; }
+    #topNavbar { padding: 0 15px; }
+    .nav-menu { margin-left: 20px; gap: 15px; }
+    .nav-link { font-size: 14px; }
     
     /* 헤더 고정 해제 & 내부 스크롤 추가 */
     header { padding: 15px; position: relative; top: 0; }
@@ -113,10 +216,14 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
     .w-1 { flex: 1 1 30%; min-width: 80px; }
     .w-4 { flex: 1 1 100%; }
 
+    /* 모달 모바일 조정 */
     .modal-content { grid-template-columns: 1fr; padding: 25px; max-height: 85vh; overflow-y: auto; gap: 15px; }
     .modal-left { border-right: none; border-bottom: 1px solid #edf2f7; padding-right: 0; padding-bottom: 15px; }
     .modal-img { max-width: 150px; margin-bottom: 10px; }
     .modal-name { font-size: 26px; }
+    .modal-right { padding-right: 28px; }
+    .modal-close { top: 10px; right: 10px; padding: 4px; }
+    .modal-close svg { width: 18px; height: 18px; }
 
     #scrollTopBtn { bottom: 20px; right: 20px; padding: 10px; }
     #scrollTopBtn svg { width: 18px; height: 18px; }
@@ -128,38 +235,4 @@ header.collapsed .toggle-icon { transform: rotate(180deg); }
     .group-label { padding-bottom: 8px; width: 100%; }
     .opt-btn { padding: 6px 12px; font-size: 12px; }
     .p-name { font-size: 12px; }
-    
-    /* 모바일 브라우저 탭 꽉 차게 */
-    .top-tabs { padding-left: 0; }
-    .tab-link { flex: 1; text-align: center; padding: 12px 0; }
 }
-
-/* =========================================
-   🛠️ 모달 닫기 버튼 겹침 현상 해결
-   ========================================= */
-.modal-close {
-    top: 12px;
-    right: 12px;
-    z-index: 200; /* 버튼이 무조건 글자 위로 오도록 설정 */
-}
-
-.modal-right {
-    padding-right: 35px; /* 닫기 버튼이 침범하지 못하도록 우측에 안전 여백 확보 */
-}
-
-/* 모바일 화면에서는 버튼 크기를 살짝 줄여서 공간 확보 */
-@media (max-width: 768px) {
-    .modal-close {
-        top: 10px;
-        right: 10px;
-        padding: 4px;
-    }
-    .modal-close svg {
-        width: 18px;
-        height: 18px;
-    }
-    .modal-right {
-        padding-right: 28px; 
-    }
-}
-
