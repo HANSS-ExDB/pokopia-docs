@@ -86,7 +86,13 @@ body {
 .nav-logo { display: flex; align-items: center; }
 .nav-logo img { height: 60px; display: block; }
 
-.nav-menu { display: flex; gap: 25px; margin-left: 200px; height: 100%; }
+.nav-menu {
+    display: flex;
+    gap: 25px;
+    margin-left: 200px;
+    height: 100%;
+    flex: 1; /* 상단바의 남은 우측 공간을 모두 차지하도록 설정 */
+}
 
 .nav-link {
     text-decoration: none;
