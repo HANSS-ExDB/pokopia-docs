@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokopia DB</title>
     
-    <link rel="stylesheet" href="./style.css?v=1.3c">
-    <script src="./data.js?v=1.3"></script>
-    <script src="./theme.js?v=1.0" defer></script>
+    <link rel="stylesheet" href="./style.css?v=1.5">
+    <script src="./data.js?v=1.4"></script>
+    <script src="./habitatData.js?v=1.0"></script> <script src="./theme.js?v=1.0" defer></script>
 </head>
+    
 <body>
     
 <nav id="topNavbar">
@@ -62,21 +63,42 @@
         <button class="modal-close" onclick="closeModal()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
+        
         <div class="modal-left">
             <span id="mId" class="modal-id"></span>
             <h2 id="mName" class="modal-name"></h2>
             <img id="mImg" class="modal-img" src="" alt="">
         </div>
-        <div class="modal-right">
+        
+        <div class="modal-center modal-right">
             <div class="info-row env-row"><div class="info-label">환경</div><div id="mEnv" class="info-value"></div></div>
             <div class="info-row"><div class="info-label">특기1</div><div id="mSpec1" class="info-value"></div></div>
             <div class="info-row"><div class="info-label">특기2</div><div id="mSpec2" class="info-value"></div></div>
             <div id="mProduceBox" class="info-row" style="display:none;"><div class="info-label">생산</div><div id="mProduce" class="info-value" style="color:var(--accent);"></div></div>
             <div class="info-row flavor-row"><div class="info-label">맛</div><div id="mFlavor" class="info-value"></div></div>
+            
+            <div class="modal-bottom" style="grid-column: span 1; border-top: none; padding-top: 15px; margin-top: auto;">
+                <div class="bottom-title" style="margin-bottom: 10px;">좋아하는 것들</div>
+                <div id="mTags" class="modal-tags"></div>
+            </div>
         </div>
-        <div class="modal-bottom">
-            <div class="bottom-title">좋아하는 것들</div>
-            <div id="mTags" class="modal-tags"></div>
+
+        <div class="modal-habitat">
+            <div class="habitat-header">
+                <div class="bottom-title" style="margin-bottom:0;">서식지</div>
+                <div class="habitat-nav">
+                    <button id="habPrev" onclick="prevHabitat()">&#9664;</button>
+                    <span id="habCount">1/1</span>
+                    <button id="habNext" onclick="nextHabitat()">&#9654;</button>
+                </div>
+            </div>
+            <div id="mHabBody" class="habitat-body">
+                <img id="mHabImg" class="habitat-img" src="" alt="">
+                <div id="mHabName" class="habitat-name"></div>
+            </div>
+            <div id="mHabEmpty" class="habitat-empty" style="display:none;">
+                아직 서식지 정보가<br>기록되지 않았습니다.
+            </div>
         </div>
     </div>
 </div>
