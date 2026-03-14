@@ -202,3 +202,64 @@ function scrollToTop() {
         behavior: 'smooth'
     });
 }
+
+// --- 서식지 페이징 로직 ---
+let currentHabitatList = [];
+let currentHabIndex = 0;
+
+function initHabitatView(habitatIds) {
+    currentHabitatList = [];
+    currentHabIndex = 0;
+
+    // data.js에 적어둔 서식지 번호(또는 이름)로 habitatDb에서 검색
+    if (habitatIds && habitatIds.length > 0 && typeof habitatDb !== 'undefined') {
+        habitatIds.forEach(target => {
+            // displayId 번호나 이름이 일치하는 서식지 찾기
+            const found = habitatDb.find(h => h.displayId === String(target) || h.name === target);
+            if (found) currentHabitatList.push(found);
+        });
+    }
+    renderHabitatSlide();
+}
+
+function renderHabitatSlide() {
+    const habEmpty = document.getElementById('mHabEmpty');
+    const habBody = document.getElementById('mHabBody');
+    const habCount = document.getElementById('habCount');
+    const habPrev = document.getElementById('habPrev');
+    const habNext = document.getElementById('habNext');
+
+    if (currentHabitatList.length === 0) {
+        habEmpty.style.display = 'block';
+        habBody.style.display = 'none';
+        habCount.textContent = '0/0';
+        habPrev.disabled = true;
+        habNext.disabled = true;
+        return;
+    }
+
+    habEmpty.style.display = 'none';
+    habBody.style.display = 'block';
+    habCount.textContent = `${currentHabIndex + 1} / ${currentHabitatList.length}`;
+    
+    habPrev.disabled = currentHabIndex === 0;
+    habNext.disabled = currentHabIndex === currentHabitatList.length - 1;
+
+    const habData = currentHabitatList[currentHabIndex];
+    document.getElementById('mHabImg').src = habData.imageUrl;
+    document.getElementById('mHabName').textContent = habData.name;
+}
+
+function prevHabitat() {
+    if (currentHabIndex > 0) {
+        currentHabIndex--;
+        renderHabitatSlide();
+    }
+}
+
+function nextHabitat() {
+    if (currentHabIndex < currentHabitatList.length - 1) {
+        currentHabIndex++;
+        renderHabitatSlide();
+    }
+}
