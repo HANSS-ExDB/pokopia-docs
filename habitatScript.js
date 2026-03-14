@@ -8,19 +8,26 @@ window.onload = () => {
     }
 };
 
+// 분류를 위한 키워드 사전
+const categoryKeywords = {
+    nature: ['풀', '꽃', '나무', '바위', '돌', '물', '밭', '곳', '폭포', '온천', '수풀', '식물', '그루터기'],
+    furniture: ['의자', '테이블', '벤치', '걸상', '침대', '소파', '옷장', '서랍장', '수납장', '화장대', '책꽂이', '계산대', '자판기', '가로등', '램프', '조명', '라이트', '스포트라이트', '화톳불', '모닥불', '캠프파이어', '머신', '제어장치', '발전기', '잔교', '전봇대', '간판', '표지판', '스테이지', '샌드백', '파라솔', '체어', '거울', '칸막이', '창고', '샤워기']
+};
+
+function getCategory(matName) {
+    for (let k of categoryKeywords.nature) {
+        if (matName.includes(k)) return 'matGroupNature';
+    }
+    for (let k of categoryKeywords.furniture) {
+        if (matName.includes(k)) return 'matGroupFurniture';
+    }
+    return 'matGroupProps';
+}
+
 function initUI() {
-    // 1. 전체 데이터에서 재료 이름만 추출 (수량 부분 ' × N' 제거 및 중복 제거)
     const allMaterialsRaw = habitatDb.flatMap(h => h.materials);
     const baseMaterials = allMaterialsRaw.map(m => m.split(' × ')[0].trim());
     const uniqueMaterials = [...new Set(baseMaterials)].sort();
-
-    // 2. 재료 필터 버튼 생성
-    const matGroup = document.getElementById('materialOptions');
-    const allMatBtn = document.createElement('button');
-    allMatBtn.className = 'opt-btn active';
-    allMatBtn.textContent = '전체';
-    allMatBtn.onclick = () => { selectedMaterials.clear(); updateActiveUI(); applyFilters(); };
-    matGroup.appendChild(allMatBtn);
 
     uniqueMaterials.forEach(mat => {
         const btn = document.createElement('button');
@@ -32,22 +39,22 @@ function initUI() {
             updateActiveUI();
             applyFilters();
         };
-        matGroup.appendChild(btn);
+        
+        const targetGroupId = getCategory(mat);
+        const targetGroup = document.getElementById(targetGroupId);
+        if (targetGroup) {
+            targetGroup.appendChild(btn);
+        }
     });
 
-    // 3. 모바일 접속 시 기본으로 필터 접기
     if (window.innerWidth <= 768) {
         toggleHeader();
     }
 }
 
 function updateActiveUI() {
-    document.querySelectorAll('#materialOptions .opt-btn').forEach(b => {
-        if (b.textContent === '전체') {
-            b.classList.toggle('active', selectedMaterials.size === 0);
-        } else {
-            b.classList.toggle('active', selectedMaterials.has(b.textContent));
-        }
+    document.querySelectorAll('.filter-container .opt-btn').forEach(b => {
+        b.classList.toggle('active', selectedMaterials.has(b.textContent));
     });
 }
 
@@ -56,13 +63,8 @@ function applyFilters() {
     const queryMat = document.getElementById('searchMaterial').value.trim().toLowerCase();
 
     const filtered = habitatDb.filter(h => {
-        // 이름 검색 일치 여부
         const nameOk = !queryName || h.name.toLowerCase().includes(queryName);
-        
-        // 재료 텍스트 검색 일치 여부
         const matTextOk = !queryMat || h.materials.some(m => m.toLowerCase().includes(queryMat));
-        
-        // 버튼으로 선택된 재료 포함 여부 (선택한 재료를 '모두' 포함해야 출력)
         const matBtnOk = selectedMaterials.size === 0 || [...selectedMaterials].every(selected => 
             h.materials.some(m => m.includes(selected))
         );
@@ -108,7 +110,6 @@ function resetAllFilters() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 맨 위로 가기 버튼 로직
 window.onscroll = function() {
     toggleTopButton();
 };
