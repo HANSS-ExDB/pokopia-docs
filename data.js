@@ -15,7 +15,7 @@ const pokemonDb = [
       "다 같이 사용하는 것"
     ],
     "flavor": "단맛",
-    habitats: ['1', '22']
+    "habitats": ['1', '22']
   },
   {
     "id": 2,
