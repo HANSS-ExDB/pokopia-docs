@@ -24,9 +24,25 @@
 </nav>
 
 <header id="mainHeader">
-    <div class="search-section" style="border-top: none; margin-top: 0; padding-top: 0;">
+    <div class="filter-container">
+        <div class="filter-group">
+            <div class="group-label">필요 재료</div>
+            <div id="materialOptions" class="group-content"></div>
+        </div>
+    </div>
+
+    <div class="header-controls">
+        <button class="toggle-btn" onclick="toggleHeader()">
+            <span class="toggle-text">필터 접기</span>
+            <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+        </button>
+        <button class="reset-btn" onclick="resetAllFilters()">필터 초기화</button>
+    </div>
+
+    <div class="search-section">
         <div class="search-row">
-            <input type="text" id="searchHabitatName" class="search-input w-4" placeholder="서식지 이름 검색" oninput="searchHabitats()">
+            <input type="text" id="searchHabitatName" class="search-input w-4" placeholder="서식지 이름 검색" oninput="applyFilters()">
+            <input type="text" id="searchMaterial" class="search-input w-4" placeholder="재료 검색" oninput="applyFilters()">
         </div>
     </div>
 </header>
