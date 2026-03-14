@@ -212,14 +212,17 @@ function initHabitatView(habitatIds) {
     currentHabitatList = [];
     currentHabIndex = 0;
 
-    // data.js에 적어둔 서식지 번호(또는 이름)로 habitatDb에서 검색
-    if (habitatIds && habitatIds.length > 0 && typeof habitatDb !== 'undefined') {
-        habitatIds.forEach(target => {
-            // displayId 번호나 이름이 일치하는 서식지 찾기
-            const found = habitatDb.find(h => h.displayId === String(target) || h.name === target);
-            if (found) currentHabitatList.push(found);
+    if (habitatIds && typeof habitatDb !== 'undefined') {
+        const targetIds = Array.isArray(habitatIds) ? habitatIds : [habitatIds];
+        
+        targetIds.forEach(target => {
+            const found = habitatDb.find(h => h.displayId === String(target) || h.name === String(target));
+            if (found) {
+                currentHabitatList.push(found);
+            }
         });
     }
+    
     renderHabitatSlide();
 }
 
@@ -247,8 +250,11 @@ function renderHabitatSlide() {
     habNext.disabled = currentHabIndex === currentHabitatList.length - 1;
 
     const habData = currentHabitatList[currentHabIndex];
-    document.getElementById('mHabImg').src = habData.imageUrl;
-    document.getElementById('mHabName').textContent = habData.name;
+    
+    if (habData) {
+        document.getElementById('mHabImg').src = habData.imageUrl || '';
+        document.getElementById('mHabName').textContent = habData.name || '이름 없음';
+    }
 }
 
 function prevHabitat() {
