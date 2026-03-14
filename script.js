@@ -128,6 +128,7 @@ function openModal(p) {
 
     document.getElementById('detailModal').style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    initHabitatView(pokemon.habitats);
 }
 
 function closeModal() { document.getElementById('detailModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
