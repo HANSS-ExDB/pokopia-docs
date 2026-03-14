@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokopia DB - 서식지 도감</title>
+    <title>Pokopia DB - 서식지</title>
     
-    <link rel="stylesheet" href="./style.css?v=1.3c">
-    
-    <script src="./theme.js?v=1.0" defer ></script>
+    <link rel="stylesheet" href="./style.css?v=1.4">
+    <script src="./theme.js?v=1.0" defer></script>
+    <script src="./habitatData.js?v=1.0"></script>
 </head>
 <body>
-
+    
 <nav id="topNavbar">
     <div class="nav-logo">
         <img src="./images/logo.png" alt="로고" onerror="this.src='https://via.placeholder.com/100x30?text=LOGO';">
@@ -19,59 +19,25 @@
         <a href="index.html" class="nav-link">포켓몬</a>
         <a href="habitat.html" class="nav-link active">서식지</a>
         
-        <button class="theme-toggle-btn" id="themeToggle" title="다크 모드 변경">🌙</button>
+        <button class="theme-toggle-btn" id="themeToggle" title="다크 모드 변경">&#127183;</button>
     </div>
 </nav>
 
 <header id="mainHeader">
-    <div class="filter-container" style="padding: 20px 0; text-align: center; color: #a0aec0; font-weight: bold;">
-        서식지 전용 필터 및 검색 영역 (준비 중)
+    <div class="search-section" style="border-top: none; margin-top: 0; padding-top: 0;">
+        <div class="search-row">
+            <input type="text" id="searchHabitatName" class="search-input w-4" placeholder="서식지 이름 검색" oninput="searchHabitats()">
+        </div>
     </div>
 </header>
 
-<div class="pokemon-grid" id="habitatList">
-    <div class="pokemon-card">
-        <div style="height: 100px; background: #edf2f7; border-radius: 8px; margin-bottom: 10px;"></div>
-        <div class="name-box">
-            <span class="p-name">서식지 1</span>
-        </div>
-    </div>
-    <div class="pokemon-card">
-        <div style="height: 100px; background: #edf2f7; border-radius: 8px; margin-bottom: 10px;"></div>
-        <div class="name-box">
-            <span class="p-name">서식지 2</span>
-        </div>
-    </div>
-    <div class="pokemon-card">
-        <div style="height: 100px; background: #edf2f7; border-radius: 8px; margin-bottom: 10px;"></div>
-        <div class="name-box">
-            <span class="p-name">서식지 3</span>
-        </div>
-    </div>
-</div>
-
-<div id="detailModal" style="display: none;">
-</div>
+<div class="pokemon-grid" id="habitatList"></div>
 
 <button id="scrollTopBtn" onclick="scrollToTop()" title="맨 위로 가기">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
 </button>
 
-<script>
-    // 맨 위로 가기 버튼 공통 로직
-    window.onscroll = function() {
-        const topBtn = document.getElementById("scrollTopBtn");
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-            topBtn.style.display = "block";
-        } else {
-            topBtn.style.display = "none";
-        }
-    };
-
-    function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-</script>
+<script src="./habitatScript.js?v=1.0"></script>
 
 </body>
 </html>
